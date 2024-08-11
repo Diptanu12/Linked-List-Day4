@@ -1,0 +1,167 @@
+Merge Sort for Linked List
+Given a linked list of n nodes, the task is to sort the given linked list using Merge Sort.
+
+Input Format
+First line contains an integer n, which is the number of nodes
+
+Second line contains n space separated integers
+
+Output Format
+Print the sorted list
+
+Example 1
+Input
+
+5
+3 5 2 4 1
+Output
+
+1 2 3 4 5
+Explanation:
+
+The sorted array is 1 2 3 4 5
+
+Example 2
+Input
+
+6
+3 5 2 4 1 6
+Output
+
+1 2 3 4 5 6
+Explanation:
+
+The sorted array is 1 2 3 4 5 6
+
+Constraints
+1 <= n <= 105
+
+1 <= node.data <= 103
+
+Topics
+Sorting
+Linked lists
+
+
+
+import java.util.*;
+
+class Solution {
+static Node getMid(Node head) {
+
+        Node slow = head, fast = head;
+
+        while(fast.next != null && fast.next.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        return slow;
+    }
+
+
+ // Merge to sorted linkedlist
+    static Node merge(Node h1, Node h2){
+
+     Node h3 = null, t3 = null;
+     
+     while(h1 != null && h2 != null) {
+         int currData = 0;
+         if(h1.data < h2.data) {
+             currData = h1.data;
+             h1 = h1.next;
+         }else {
+             currData = h2.data;
+             h2 = h2.next;
+         }
+
+         Node nn = new Node(currData);
+
+         if(h3 == null) {
+             h3 = nn;
+             t3 = nn;
+         }else {
+             t3.next = nn;
+             t3 = t3.next;
+         }
+         
+     }
+
+     if(h1 != null) {
+         t3.next = h1;
+     }else {
+         t3.next = h2;
+     }
+
+     return h3;
+     
+    }
+    
+// merge sort code
+    public static Node mergesort(Node h1){
+        // base case
+        if(h1 == null || h1.next == null) {
+            return h1;
+        }
+
+        // find mid 
+        Node mid = getMid(h1);
+        // separate first half and second half of ll (h1, h2)
+        Node h2 = mid.next;
+        mid.next = null;
+
+
+        // rec call for h1
+        h1 = mergesort(h1);
+        // rec call for h2
+        h2 = mergesort(h2);
+         
+       // merge two sorted linked list
+        Node ans = merge(h1, h2);
+        return ans;
+        
+        
+
+    }
+}
+
+
+class Node{
+    int data;
+    Node next = null;
+    Node(int data){
+        this.data = data;
+        next = null;
+    }
+}
+class LinkedList{
+    Node head;
+    void add(int data){
+        Node new_node = new Node(data);
+        if(head == null){
+            head = new_node;
+            return;
+        }
+        Node curr = head;
+        while(curr.next != null)
+            curr = curr.next;
+        curr.next = new_node;
+    }
+}
+public class Main {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        int n = input.nextInt();
+        LinkedList a = new LinkedList();
+        for(int i = 0; i < n; i++){
+            a.add(input.nextInt());
+        }
+        Solution Obj = new Solution();
+        a.head = Obj.mergesort(a.head);
+        Node h = a.head;
+        while(h != null){
+            System.out.print(h.data + " ");
+            h = h.next;
+        }
+    }
+}
